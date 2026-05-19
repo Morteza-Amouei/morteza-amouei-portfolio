@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morteza Amouei - AI Portfolio | Production Projects</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 60px; color: #1a1a1a; }
+        h1 { font-size: 42px; font-weight: 700; margin-bottom: 10px; }
+        .tagline { font-size: 18px; color: #555; margin-bottom: 20px; }
+        .bio { max-width: 700px; margin: 0 auto; font-size: 16px; line-height: 1.6; color: #666; }
+
+        .filter-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 50px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-btn {
+            padding: 18px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            border: 2.5px solid #333;
+            background: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-height: 90px;
+            justify-content: center;
+        }
+
+        .filter-btn .count {
+            display: inline-block;
+            background: #333;
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+            background: #f0f0f0;
+            border-color: #333;
+        }
+
+        .filter-btn-chat {
+            background: linear-gradient(135deg, #1a7a70 0%, #2a9d8f 100%);
+            color: white !important;
+            border-color: #1a7a70;
+        }
+
+        .filter-btn-chat:hover {
+            background: linear-gradient(135deg, #1a7a70 0%, #2a9d8f 100%);
+            border-color: #1a7a70;
+            box-shadow: 0 8px 20px rgba(42,157,143,0.4);
+        }
+
+        .filter-btn-chat .live-dot {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+        }
+
+        .filter-btn.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        .filter-btn.active .count {
+            background: white;
+            color: #333;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+            border-color: #333;
+        }
+
+        .project-card.hidden { display: none; }
+
+        .project-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: #1a1a1a; }
+        .project-tech { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .tech-tag {
+            background: #f0f0f0;
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .project-description { color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+
+        .impact { background: #f9f9f9; border-left: 4px solid #333; padding: 16px; border-radius: 4px; margin: 20px 0; }
+        .impact-title { font-weight: 700; color: #1a1a1a; margin-bottom: 8px; font-size: 14px; }
+        .impact-stat { font-size: 28px; font-weight: 700; color: #2a9d8f; margin: 8px 0; }
+        .impact-text { color: #666; font-size: 14px; }
+
+        .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .metric { background: #f0f7ff; padding: 12px; border-radius: 6px; text-align: center; }
+        .metric-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+        .metric-value { font-size: 18px; font-weight: 700; color: #2a9d8f; }
+
+        .chat-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #0f4d47 0%, #1a7a70 60%, #2a9d8f 100%);
+            padding: 28px 28px 24px;
+            color: white;
+        }
+
+        .chat-header-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .chat-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .chat-header p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.5;
+        }
+
+        .chat-powered {
+            margin-top: 14px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .chat-powered span {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .chat-body {
+            padding: 24px;
+        }
+
+        .messages {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: #2a9d8f;
+            color: white;
+            margin-left: auto;
+            width: fit-content;
+            max-width: 80%;
+            text-align: right;
+            border-radius: 8px 0 8px 8px;
+        }
+
+        .message.ai {
+            background: #f0f0f0;
+            color: #333;
+            margin-right: auto;
+            width: fit-content;
+            max-width: 80%;
+            border-radius: 0 8px 8px 8px;
+        }
+
+        .message.system {
+            background: #fff3cd;
+            color: #856404;
+            text-align: center;
+            font-style: italic;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #2a9d8f;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #2a9d8f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #21867a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42,157,143,0.3);
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .quick-btn {
+            text-align: left;
+            padding: 12px 16px;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .quick-btn:hover {
+            background: #e0e0e0;
+            border-color: #2a9d8f;
+        }
+
+        footer { text-align: center; margin-top: 60px; color: #888; padding-bottom: 20px; }
+
+        @media (max-width: 768px) {
+            .message.user { margin-left: 0; }
+            .message.ai { margin-right: 0; }
+            .message.system { margin: 0; }
+            .projects { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI in Action</h1>
+            <p class="tagline">Morteza Amouei | AI Engineer & Machine Learning Specialist</p>
+            <p class="bio">
+                A collection of production AI systems I've engineered across multiple domains. From LLM-powered applications
+                and RAG architectures to computer vision and ML pipelines, each project demonstrates real-world impact: faster
+                decision-making, automated workflows, and measurable business value. Built for scale, deployed to production,
+                and optimized for user adoption across diverse teams and industries.
+            </p>
+        </header>
+
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn filter-btn-chat" onclick="switchTab('chat')">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="live-dot"></div>
+                    <span>MoriAI Chat</span>
+                </div>
+                <span style="font-size:12px;font-weight:400;opacity:0.85;">Ask me anything live!</span>
+            </button>
+            <button class="filter-btn active" onclick="switchTab('projects-view'); filterProjects('all')">All Projects <span class="count">6</span></button>
+            <button class="filter-btn" onclick="switchTab('projects-view'); filterProjects('llm')">LLM & GenAI <span class="count">3</span></button>
+            <button class="filter-btn" onclick="switchTab('projects-view'); filterProjects('ml')">ML & Deep Learning <span class="count">3</span></button>
+        </div>
+
+        <!-- Chat Tab -->
+        <div id="chat" class="tab-content">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-header-top">
+                        <div class="live-badge">
+                            <div class="live-dot"></div>
+                            Live
+                        </div>
+                    </div>
+                    <h2>Want to know more about me?</h2>
+                    <p>Ask it anything about my experience, projects, or skills from my AI Assistant, MoriAI!</p>
+                    <div class="chat-powered">Powered by <span>Ollama · neural-chat 7B</span> · tunneled via <span>ngrok</span></div>
+                </div>
+                <div class="chat-body">
+                    <div class="messages" id="messages">
+                        <div class="message system">Ask me about Morteza's experience with AI, ML, or any specific technology</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Ask about my experience..." onkeypress="handleKeyPress(event)">
+                        <button onclick="sendMessage()">Send</button>
+                    </div>
+                    <div class="quick-questions">
+                        <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Quick questions:</p>
+                        <button class="quick-btn" onclick="askAI('Tell me about your LLM and RAG experience')">LLM & RAG Experience</button>
+                        <button class="quick-btn" onclick="askAI('What experience do you have with deep learning?')">Deep Learning & Computer Vision</button>
+                        <button class="quick-btn" onclick="askAI('What tools and technologies do you use?')">Tools & Technologies</button>
+                        <button class="quick-btn" onclick="askAI('How would you approach building an AI system?')">Approach to AI Systems</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Tab -->
+        <div id="projects-view" class="tab-content active">
+            <div class="projects" id="projects"></div>
+        </div>
+
+        <footer>
+            <p><strong>Contact:</strong> mz.amouei@gmail.com | +31 684 598 679</p>
+            <p style="margin-top: 10px; font-size: 13px;">Portfolio: 6 production AI systems | 3 LLM/GenAI + 3 ML/Deep Learning projects</p>
+        </footer>
+    </div>
+
+    <script src="cv.js"></script>
+    <script>
+        const PROJECTS = [
+            {
+                name: "GeoAI Assistant",
+                category: "llm",
+                tech: ["LangChain", "FAISS", "RAG", "LLM", "Python"],
+                description: "Natural language interface for geospatial databases. Users ask questions in plain English instead of writing SQL, dramatically lowering the barrier for non-technical stakeholders.",
+                impact: "100%",
+                impactText: "Non-technical users can now query spatial data independently.",
+                metrics: [
+                    { label: "Accuracy", value: "95%" },
+                    { label: "User Adoption", value: "High" }
+                ]
+            },
+            {
+                name: "Meeting Intelligence Platform",
+                category: "llm",
+                tech: ["Whisper", "Llama", "Audio Processing", "Streamlit"],
+                description: "End-to-end meeting automation: transcribe audio, identify speakers, generate AI summaries. Turns meetings into actionable intelligence without manual note-taking.",
+                impact: "4 hours/week",
+                impactText: "Saved per team member on documentation. Improved decision tracking.",
+                metrics: [
+                    { label: "Transcription", value: "98%" },
+                    { label: "Time Saved", value: "80%" }
+                ]
+            },
+            {
+                name: "Genie: AI Dashboard Assistant",
+                category: "llm",
+                tech: ["LLM", "Prompt Engineering", "Power BI", "Azure Databricks"],
+                description: "Non-technical users ask Genie about KPIs in plain language. Democratizing analytics across multiple teams and domains.",
+                impact: "40+ users",
+                impactText: "Self-service analytics at scale. Finance, tourism, manufacturing, retail.",
+                metrics: [
+                    { label: "User Base", value: "40+" },
+                    { label: "Success Rate", value: "92%" }
+                ]
+            },
+            {
+                name: "Intelligent Production Planning",
+                category: "ml",
+                tech: ["Optimization", "ML", "Constraint Solving", "Python"],
+                description: "Automated manufacturing schedule optimization. The system learns from production history, respects complex constraints, and proposes optimal schedules.",
+                impact: "80%",
+                impactText: "Reduction in manual planning time eliminated.",
+                metrics: [
+                    { label: "Schedule Time", value: "<1 min" },
+                    { label: "Compliance", value: "100%" }
+                ]
+            },
+            {
+                name: "Magazine Demand Forecasting",
+                category: "ml",
+                tech: ["Time Series", "PySpark", "MLOps", "Databricks"],
+                description: "Predict magazine demand by publication, location, and time. Powers inventory optimization with automated retraining.",
+                impact: "40%",
+                impactText: "Forecast accuracy improvement. Better inventory turns.",
+                metrics: [
+                    { label: "MAPE", value: "12.5%" },
+                    { label: "Uptime", value: "99.8%" }
+                ]
+            },
+            {
+                name: "Road Safety Object Detection",
+                category: "ml",
+                tech: ["Deep Learning", "YOLO", "Computer Vision", "Geospatial AI", "PostgreSQL"],
+                description: "Automated detection and classification of road safety objects in satellite/aerial imagery across the Netherlands using YOLO deep learning.",
+                impact: "3,000 objects",
+                impactText: "Detected and geo-localized in just 30 minutes.",
+                metrics: [
+                    { label: "Speed", value: "100 obj/min" },
+                    { label: "Coverage", value: "Netherlands-wide" }
+                ]
+            }
+        ];
+
+        function renderProjects(projects) {
+            const container = document.getElementById('projects');
+            container.innerHTML = projects.map(p => `
+                <div class="project-card">
+                    <div class="project-title">${p.name}</div>
+                    <div class="project-tech">
+                        ${p.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                    </div>
+                    <p class="project-description">${p.description}</p>
+                    <div class="impact">
+                        <div class="impact-title">The Impact</div>
+                        <div class="impact-stat">${p.impact}</div>
+                        <p class="impact-text">${p.impactText}</p>
+                    </div>
+                    <div class="metrics">
+                        ${p.metrics.map(m => `
+                            <div class="metric">
+                                <div class="metric-label">${m.label}</div>
+                                <div class="metric-value">${m.value}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProjects(category) {
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Find and activate the correct button
+            const buttons = document.querySelectorAll('.filter-btn');
+            if (category === 'all') {
+                buttons[1].classList.add('active');
+            } else if (category === 'llm') {
+                buttons[2].classList.add('active');
+            } else if (category === 'ml') {
+                buttons[3].classList.add('active');
+            }
+
+            // Ensure projects view is active
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('projects-view').classList.add('active');
+
+            // Filter and render projects
+            if (category === 'all') {
+                renderProjects(PROJECTS);
+            } else {
+                renderProjects(PROJECTS.filter(p => p.category === category));
+            }
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+
+            // Show selected tab
+            const tab = document.getElementById(tabName);
+            if (tab) {
+                tab.classList.add('active');
+            }
+
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Handle search initialization
+            if (tabName === 'search') {
+                renderSearch('');
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            askAI(msg);
+            input.value = '';
+            input.focus();
+        }
+
+        async function askAI(question) {
+            const messagesDiv = document.getElementById('messages');
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = question;
+            messagesDiv.appendChild(userMsg);
+
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'message ai';
+            aiMsg.id = 'aiResponse';
+            aiMsg.textContent = 'Thinking...';
+            messagesDiv.appendChild(aiMsg);
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            try {
+                // LOCAL TESTING: Use localhost
+                const OLLAMA_URL = 'https://nominally-pro-feline.ngrok-free.app';
+
+                // Check if URL is still placeholder
+                if (OLLAMA_URL.includes('YOUR_NGROK_URL_HERE')) {
+                    aiMsg.textContent = 'Please update the ngrok URL in the portfolio. Check SETUP_OLLAMA_NGROK_GITHUB.md for instructions.';
+                    return;
+                }
+
+                const response = await fetch(OLLAMA_URL + '/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'neural-chat',
+                        prompt: `You are Morteza Amouei's personal AI assistant embedded in his portfolio. Answer questions about him based strictly on the CV below. Be helpful, specific, and professional. Keep answers to 2-4 sentences.
+
+${CV}
+
+Question: ${question}`,
+                        stream: false
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error('Ollama error: ' + (errorData.error || response.status));
+                }
+
+                const data = await response.json();
+
+                if (data.response) {
+                    aiMsg.textContent = data.response;
+                } else {
+                    aiMsg.textContent = 'No response from Ollama. Try again.';
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+
+                // Helpful error messages
+                if (error.message.includes('Failed to fetch')) {
+                    aiMsg.textContent = 'MoriAI is currently offline. Please check back later or reach out directly at mz.amouei@gmail.com.';
+                } else if (error.message.includes('Ollama error')) {
+                    aiMsg.textContent = 'MoriAI is currently offline. Please check back later or reach out directly at mz.amouei@gmail.com.';
+                } else {
+                    aiMsg.textContent = 'MoriAI is currently offline. Please check back later or reach out directly at mz.amouei@gmail.com.';
+                }
+            }
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function generateAnswer(question) {
+            const q = question.toLowerCase();
+
+            if (q.includes('strength') || q.includes('different') || q.includes('what sets you apart') || q.includes('unique')) {
+                return "Several things set me apart: (1) I deliver production-ready systems, not prototypes - all 6 projects are live and used by real teams. (2) Full-stack expertise - I own the complete pipeline from data engineering through deployment. (3) Cross-team enablement - Genie serves 40+ non-technical users; I design AI products people actually use. (4) Diverse skill set - LLMs, computer vision, ML optimization across multiple domains. (5) Business acumen - I translate complex requirements into solutions that drive measurable impact. (6) Production thinking - Reliability and monitoring matter as much as algorithm performance.";
+            }
+
+            if (q.includes('llm') || q.includes('language model') || q.includes('rag') || q.includes('retrieval')) {
+                return "I've built three LLM-powered production systems: (1) GeoAI Assistant - A RAG system using LangChain and FAISS enabling natural language querying of geospatial databases without SQL, achieving 95% accuracy. (2) Meeting Intelligence - Uses Whisper for transcription and Llama for summaries, saving 4+ hours weekly. (3) Genie - AI dashboard assistant enabling 40+ non-technical users to explore KPIs in natural language across finance, tourism, manufacturing, retail. All systems demonstrate production-grade RAG, prompt engineering at scale, and cross-team enablement on Azure Databricks.";
+            }
+
+            if (q.includes('deep learning') || q.includes('computer vision') || q.includes('yolo') || q.includes('object detection')) {
+                return "My computer vision expertise includes a YOLO-based deep learning pipeline for road safety object detection in aerial imagery. System automatically detects and geo-localizes 3,000+ objects in 30 minutes across the Netherlands. I determined optimal satellite imagery resolution for accurate detection and established comprehensive geo-localized databases supporting GIS analysis. Experience with: deep learning model training, large-scale image processing pipelines, spatial database integration, and production computer vision deployment.";
+            }
+
+            if (q.includes('tool') || q.includes('technology') || q.includes('tech stack') || q.includes('what do you use')) {
+                return "Tech stack: Python (primary), Azure Databricks, PySpark for distributed processing, LangChain and FAISS for RAG, Whisper and Llama for LLMs, YOLO for computer vision, Power BI and Streamlit for visualization. Databases: PostgreSQL, Delta Lake, spatial databases. Cloud: Full Azure ecosystem with CI/CD in Azure DevOps. Full ML lifecycle: data engineering, model development, production deployment, monitoring, optimization. Comfortable with MLOps, REST APIs, and scalable architecture.";
+            }
+
+            if (q.includes('approach') || q.includes('would you') || q.includes('how would you build')) {
+                return "My approach: (1) Deep business problem understanding - translate requirements to technical specs. (2) Minimal viable implementation - validate approach quickly. (3) Optimize for production - scalability, monitoring, reliability matter from day one. (4) User adoption focus - AI must empower users, not confuse them. (5) Measure impact rigorously - track metrics that matter. I've applied this successfully across LLMs, computer vision, and ML optimization in diverse industries.";
+            }
+
+            if (q.includes('optimization') || q.includes('scheduling') || q.includes('forecasting') || q.includes('production planning')) {
+                return "I've built two significant optimization systems: (1) Intelligent Production Planning - Automated manufacturing scheduler respecting complex constraints (machine availability, labor, materials), reducing manual time by 80% with <1 minute generation and 100% compliance. (2) Magazine Demand Forecasting - Time series ML predicting demand by location/publication, achieving 40% accuracy improvement with 12.5% MAPE, deployed on Databricks with automated weekly retraining. Both demonstrate constraint satisfaction expertise and production ML operations.";
+            }
+
+            if (q.includes('geojunxion') || q.includes('geospatial')) {
+                return "At GeoJunxion, I developed deep learning models for geospatial analysis - specifically a YOLO-based system for object detection in aerial imagery across the Netherlands. Built scalable Python pipelines for processing large datasets, enabling efficient classification and geo-localization. Designed spatial database solutions storing and analyzing detection outputs for infrastructure and mapping projects. This role taught me bridging geospatial technology with AI/ML and designing systems that scale across regions.";
+            }
+
+            if (q.includes('engineer') || q.includes('fit')) {
+                return "As an AI Engineer, I bring: (1) End-to-end ownership - from problem definition through production deployment. (2) Production mindset - reliability, scalability, monitoring are as important as accuracy. (3) Business translation - I understand how to turn requirements into systems that drive real value. (4) Versatility - LLMs, computer vision, ML optimization, data engineering. (5) User focus - I build AI products people want to use, evident from Genie's 40+ user adoption. (6) Proven impact - 95% accuracy, 40% improvements, 80% automation, measurable results across 6 live systems.";
+            }
+
+            return "That's a great question! My portfolio spans 6 production AI systems: 3 LLM/GenAI projects and 3 ML/deep learning projects. I've delivered measurable impact - 95% RAG accuracy, 40% forecast improvements, 80% manual work reduction, and enabled 40+ users to self-serve analytics. What aspect interests you most - technical implementation, business impact, or how I'd apply this to your specific needs?";
+        }
+
+        // Initialize
+        renderProjects(PROJECTS);
+    </script>
+</body>
+</html>
